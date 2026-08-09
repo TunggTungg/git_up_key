@@ -1,5 +1,4 @@
-Release\net6.0-windows\logs.txt
-
+config_private.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
