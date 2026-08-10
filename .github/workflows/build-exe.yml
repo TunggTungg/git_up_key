@@ -24,24 +24,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller
 
-    # 1. Tạo file config_private.py tạm thời từ GitHub Secrets
-    - name: Generate Config File from Secrets
-      shell: bash
-      run: |
-        cat <<EOF > config_private.py
-        USER_CONFIG = {
-            "key_title": "${{ secrets.APP_KEY_TITLE }}",
-            "token": "${{ secrets.APP_TOKEN }}",
-            "username": "${{ secrets.APP_USERNAME }}",
-            "email": "${{ secrets.APP_EMAIL }}",
-            "passphrase": "${{ secrets.APP_PASSPHRASE }}"
-        }
-        EOF
-
     # 2. Đóng gói thành file .exe độc lập
     - name: Build EXE with PyInstaller
       run: |
-        pyinstaller --noconfirm --onefile --windowed --add-data "config_private.py;." main.py
+        pyinstaller --noconfirm --onefile --windowed --name="GitHub SSH & Git Identity Manager" --icon="app_icon.ico" main.py 
 
     # 3. Đẩy file .exe lên GitHub Artifacts để tải về
     - name: Upload Artifact

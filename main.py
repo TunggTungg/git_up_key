@@ -10,18 +10,10 @@ import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 
 # =========================================================================
-# 1. TỰ ĐỘNG NẠP CẤU HÌNH TỪ CONFIG_PRIVATE.PY (NẾU CÓ)
+# 1. CẤU HÌNH GIÁ TRỊ MẶC ĐỊNH TRỰC TIẾP TRONG CODE (KHÔNG CẦN CONFIG FILE)
 # =========================================================================
-try:
-    from config_private import USER_CONFIG
-except ImportError:
-    USER_CONFIG = {
-        "key_title": "My-Workstation-PC",
-        "token": "",
-        "username": "",
-        "email": "",
-        "passphrase": ""
-    }
+DEFAULT_USERNAME = "Tungg Tungg"  # Thay Username mặc định của bạn vào đây
+DEFAULT_EMAIL = "hothanhtung2052001@gmail.com"    # Thay Email mặc định của bạn vào đây
 
 
 # ==========================================
@@ -69,6 +61,14 @@ class GitHubSSHApp(tk.Tk):
         )
         style.map("Primary.TButton", background=[("active", "#005999"), ("disabled", "#555555")])
 
+         # Application window icon configuration
+        if getattr(sys, 'frozen', False):
+            self.wm_iconbitmap(sys.executable)
+        else:
+            icon_path = os.path.abspath("app_icon.ico")
+            if os.path.exists(icon_path):
+                self.wm_iconbitmap(icon_path)
+
     def create_widgets(self):
         # Header
         header_frame = ttk.Frame(self)
@@ -79,7 +79,7 @@ class GitHubSSHApp(tk.Tk):
         
         sub_label = ttk.Label(
             header_frame, 
-            text="Công cụ 1-Click Setup: Tự động khởi tạo SSH Key, cấu hình Git Identity và đẩy Public Key lên GitHub.",
+            text="Công cụ Setup: Tự động khởi tạo SSH Key, cấu hình Git Identity và đẩy Public Key lên GitHub.",
             font=("Segoe UI", 9),
             foreground="#888888"
         )
@@ -89,12 +89,13 @@ class GitHubSSHApp(tk.Tk):
         panel = ttk.Frame(self, style="Panel.TFrame")
         panel.pack(fill="x", padx=20, pady=10, ipady=10)
 
+        # Cấu hình danh sách trường: (Nhãn, Tên thuộc tính, Có che bằng sao không, Giá trị mặc định)
         fields = [
-            ("Tên nhận diện Key (Key Title):", "entry_key_name", False, USER_CONFIG.get("key_title", "My-Workstation-PC")),
-            ("Personal Access Token (PAT):", "entry_token", True, USER_CONFIG.get("token", "")),
-            ("GitHub Username:", "entry_username", False, USER_CONFIG.get("username", "")),
-            ("Git Email:", "entry_email", False, USER_CONFIG.get("email", "")),
-            ("SSH Passphrase (Mật khẩu Key):", "entry_passphrase", True, USER_CONFIG.get("passphrase", ""))
+            ("Tên nhận diện Key (Key Title):", "entry_key_name", False, "My-Workstation-PC"),
+            ("Personal Access Token (PAT):", "entry_token", True, ""),
+            ("GitHub Username:", "entry_username", False, DEFAULT_USERNAME),
+            ("Git Email:", "entry_email", False, DEFAULT_EMAIL),
+            ("SSH Passphrase (Mật khẩu Key):", "entry_passphrase", True, "")
         ]
 
         for i, (label_text, attr_name, is_show_star, default_val) in enumerate(fields):
@@ -136,7 +137,7 @@ class GitHubSSHApp(tk.Tk):
 
         self.txt_log = scrolledtext.ScrolledText(
             log_frame,
-            font=("Consolas", 9.5),
+            font=("Consolas", 9),
             bg="#121212",
             fg="#cccccc",
             insertbackground="#ffffff",
