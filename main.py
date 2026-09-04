@@ -8,6 +8,8 @@ import urllib.error
 from pathlib import Path
 import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
+import ssl
+import certifi
 
 # =========================================================================
 # 1. CẤU HÌNH GIÁ TRỊ MẶC ĐỊNH TRỰC TIẾP TRONG CODE (KHÔNG CẦN CONFIG FILE)
@@ -242,7 +244,8 @@ class GitHubSSHApp(tk.Tk):
             )
 
             try:
-                with urllib.request.urlopen(req) as resp:
+                ssl_context = ssl.create_default_context(cafile=certifi.where())
+                with urllib.request.urlopen(req, context=ssl_context) as resp:
                     if resp.status == 201:
                         self.log("Đã thêm SSH Key lên tài khoản GitHub thành công!", "SUCCESS")
             except urllib.error.HTTPError as e:
