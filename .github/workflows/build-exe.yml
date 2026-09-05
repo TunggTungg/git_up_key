@@ -22,7 +22,7 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install pyinstaller
+        pip install -r requirements.txt
 
     # 2. Đóng gói thành file .exe độc lập
     - name: Build EXE with PyInstaller
